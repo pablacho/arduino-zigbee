@@ -51,31 +51,20 @@
 #define digOutHigh      0x05
 #define askStatus       0x00
 
-class intZigbee {
-	public: 
-		start(Stream &serial);	// inicializa local en puerto serie
-	private:
-		//
-}
-
-class extZigbee {
-	public: 
-		void 		start(uint32_t msb, uint32_t lsb);	// inicializa zigbee remota
-		uint8_t*	getMac();							// pregunta por la MAC de la zigbee_h	
-		bool		sendPacket();						// envía un paquete, responde 1 si lo mandó o 0 si hubo error
-		bool		readPacket(int timeout);			// espera paquete en 'timeout' tiempo, 1 si recibió 0 si hubo error
-	private:
-		//
-}
-
-class dataPacket {
+class zBee {
 	public:
-		void 		setLength(uint8_t lenght);
-		void 		setData(uint8_t* data);
-		void 		setCommand(uint8_t* command);
+		zBee(Stream &serial);	// inicializa local en puerto serie
+		bool createMsg();
+		bool interpretMsg();
+		bool sendMsg();
+		bool readMsg();
+		uint8_t selfMAC[8];
+		uint8_t currentMAC[8];
 		
-		
+	private:
+		long _calcChecksum();
+		void _mac2Array(unsigned long macHigh, unsigned long macLow, byte answer[]);
+		void _clearBuffer();
 }
-
 
 #endif //zigbee_h
